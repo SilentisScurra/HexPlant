@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hex Plant Merge - Centered Grid</title>
+    <style>
+        body {
+            background-color: #222;
+            color: #FFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: sans-serif;
+        }
+        canvas {
+            width: 700px;
+            height: 700px;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: -webkit-crisp-edges;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+            background-color: #111;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="gameCanvas" width="350" height="350"></canvas>
+
+<script>
+    // ==========================================
+    // 1. PASTE YOUR FULL JSON HERE
+    // ==========================================
+    const BOARD_JSON = {"tileSize":32,"tileType":"hex","layers":[{"visible":true,"maps":[{"name":"Map 1","visible":true,"isCollisionMap":false,"items":[{"type":"cell","file":"pixelforge_export (2).png","localX":0,"localY":0,"globalX":0,"globalY":0,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":0,"localY":-1,"globalX":16,"globalY":-24,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":-1,"localY":-1,"globalX":-16,"globalY":-24,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":-1,"localY":0,"globalX":-32,"globalY":0,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":-1,"localY":1,"globalX":-16,"globalY":24,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":0,"localY":1,"globalX":16,"globalY":24,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":1,"localY":0,"globalX":32,"globalY":0,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":1,"localY":-2,"globalX":32,"globalY":-48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":0,"localY":-2,"globalX":0,"globalY":-48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":-1,"localY":-2,"globalX":-32,"globalY":-48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":-2,"localY":-1,"globalX":-48,"globalY":-24,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":-2,"localY":0,"globalX":-64,"globalY":0,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":-2,"localY":1,"globalX":-48,"globalY":24,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":-1,"localY":2,"globalX":-32,"globalY":48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":0,"localY":2,"globalX":0,"globalY":48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":1,"localY":2,"globalX":32,"globalY":48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":1,"localY":1,"globalX":48,"globalY":24,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":2,"localY":0,"globalX":64,"globalY":0,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":1,"localY":-1,"globalX":48,"globalY":-24,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":1,"localY":-3,"globalX":48,"globalY":-72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":0,"localY":-3,"globalX":16,"globalY":-72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":-1,"localY":-3,"globalX":-16,"globalY":-72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":-2,"localY":-3,"globalX":-48,"globalY":-72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":-2,"localY":-2,"globalX":-64,"globalY":-48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-3,"localY":-2,"globalX":-96,"globalY":-48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":-3,"localY":-1,"globalX":-80,"globalY":-24,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-4,"localY":-1,"globalX":-112,"globalY":-24,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":-3,"localY":0,"globalX":-96,"globalY":0,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":-3,"localY":1,"globalX":-80,"globalY":24,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":-2,"localY":2,"globalX":-64,"globalY":48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-3,"localY":3,"globalX":-80,"globalY":72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":-2,"localY":3,"globalX":-48,"globalY":72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-2,"localY":4,"globalX":-64,"globalY":96,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":-1,"localY":3,"globalX":-16,"globalY":72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":0,"localY":3,"globalX":16,"globalY":72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":1,"localY":3,"globalX":48,"globalY":72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":2,"localY":2,"globalX":64,"globalY":48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":2,"localY":1,"globalX":80,"globalY":24,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":2,"localY":-2,"globalX":64,"globalY":-48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":2,"localY":-1,"globalX":80,"globalY":-24,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (2).png","localX":3,"localY":0,"globalX":96,"globalY":0,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-1,"localY":4,"globalX":-32,"globalY":96,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":0,"localY":4,"globalX":0,"globalY":96,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":1,"localY":4,"globalX":32,"globalY":96,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":2,"localY":4,"globalX":64,"globalY":96,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":4,"localY":0,"globalX":128,"globalY":0,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":3,"localY":1,"globalX":112,"globalY":24,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":3,"localY":2,"globalX":96,"globalY":48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":2,"localY":3,"globalX":80,"globalY":72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":2,"localY":-4,"globalX":64,"globalY":-96,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":2,"localY":-3,"globalX":80,"globalY":-72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":3,"localY":-2,"globalX":96,"globalY":-48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":3,"localY":-1,"globalX":112,"globalY":-24,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-2,"localY":-4,"globalX":-64,"globalY":-96,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-1,"localY":-4,"globalX":-32,"globalY":-96,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":0,"localY":-4,"globalX":0,"globalY":-96,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":1,"localY":-4,"globalX":32,"globalY":-96,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-3,"localY":-3,"globalX":-80,"globalY":-72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-4,"localY":0,"globalX":-128,"globalY":0,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-4,"localY":1,"globalX":-112,"globalY":24,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-3,"localY":2,"globalX":-96,"globalY":48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-5,"localY":0,"globalX":-160,"globalY":0,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-5,"localY":1,"globalX":-144,"globalY":24,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-4,"localY":2,"globalX":-128,"globalY":48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-4,"localY":3,"globalX":-112,"globalY":72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-3,"localY":4,"globalX":-96,"globalY":96,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-3,"localY":5,"globalX":-80,"globalY":120,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-2,"localY":5,"globalX":-48,"globalY":120,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-1,"localY":5,"globalX":-16,"globalY":120,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":0,"localY":5,"globalX":16,"globalY":120,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":1,"localY":5,"globalX":48,"globalY":120,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":2,"localY":5,"globalX":80,"globalY":120,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":5,"localY":0,"globalX":160,"globalY":0,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":4,"localY":1,"globalX":144,"globalY":24,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":4,"localY":2,"globalX":128,"globalY":48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":3,"localY":3,"globalX":112,"globalY":72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":3,"localY":4,"globalX":96,"globalY":96,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":2,"localY":-5,"globalX":80,"globalY":-120,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":3,"localY":-4,"globalX":96,"globalY":-96,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":3,"localY":-3,"globalX":112,"globalY":-72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":4,"localY":-2,"globalX":128,"globalY":-48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":4,"localY":-1,"globalX":144,"globalY":-24,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-5,"localY":-1,"globalX":-144,"globalY":-24,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-4,"localY":-2,"globalX":-128,"globalY":-48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-4,"localY":-3,"globalX":-112,"globalY":-72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-3,"localY":-4,"globalX":-96,"globalY":-96,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-4,"localY":-5,"globalX":-112,"globalY":-120,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-3,"localY":-5,"globalX":-80,"globalY":-120,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-2,"localY":-5,"globalX":-48,"globalY":-120,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-1,"localY":-5,"globalX":-16,"globalY":-120,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":0,"localY":-5,"globalX":16,"globalY":-120,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":1,"localY":-5,"globalX":48,"globalY":-120,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-5,"localY":-2,"globalX":-160,"globalY":-48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-5,"localY":-3,"globalX":-144,"globalY":-72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-5,"localY":-4,"globalX":-160,"globalY":-96,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-4,"localY":-4,"globalX":-128,"globalY":-96,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-5,"localY":-5,"globalX":-144,"globalY":-120,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":3,"localY":-5,"globalX":112,"globalY":-120,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":4,"localY":-4,"globalX":128,"globalY":-96,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":5,"localY":-2,"globalX":160,"globalY":-48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":4,"localY":-3,"globalX":144,"globalY":-72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":5,"localY":-4,"globalX":160,"globalY":-96,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":4,"localY":-5,"globalX":144,"globalY":-120,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":5,"localY":2,"globalX":160,"globalY":48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":4,"localY":3,"globalX":144,"globalY":72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":4,"localY":4,"globalX":128,"globalY":96,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":5,"localY":4,"globalX":160,"globalY":96,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":3,"localY":5,"globalX":112,"globalY":120,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":4,"localY":5,"globalX":144,"globalY":120,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-4,"localY":5,"globalX":-112,"globalY":120,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-5,"localY":5,"globalX":-144,"globalY":120,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-4,"localY":4,"globalX":-128,"globalY":96,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-5,"localY":4,"globalX":-160,"globalY":96,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-5,"localY":3,"globalX":-144,"globalY":72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-5,"localY":2,"globalX":-160,"globalY":48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-5,"localY":6,"globalX":-160,"globalY":144,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-4,"localY":6,"globalX":-128,"globalY":144,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-3,"localY":6,"globalX":-96,"globalY":144,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-2,"localY":6,"globalX":-64,"globalY":144,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-1,"localY":6,"globalX":-32,"globalY":144,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":0,"localY":6,"globalX":0,"globalY":144,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":1,"localY":6,"globalX":32,"globalY":144,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":2,"localY":6,"globalX":64,"globalY":144,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":3,"localY":6,"globalX":96,"globalY":144,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":4,"localY":6,"globalX":128,"globalY":144,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":5,"localY":6,"globalX":160,"globalY":144,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":5,"localY":5,"globalX":176,"globalY":120,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":6,"localY":4,"globalX":192,"globalY":96,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":5,"localY":3,"globalX":176,"globalY":72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":6,"localY":2,"globalX":192,"globalY":48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":5,"localY":1,"globalX":176,"globalY":24,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":6,"localY":0,"globalX":192,"globalY":0,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":5,"localY":-1,"globalX":176,"globalY":-24,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":6,"localY":-2,"globalX":192,"globalY":-48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":5,"localY":-3,"globalX":176,"globalY":-72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":6,"localY":-4,"globalX":192,"globalY":-96,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":5,"localY":-5,"globalX":176,"globalY":-120,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":5,"localY":-6,"globalX":160,"globalY":-144,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":4,"localY":-6,"globalX":128,"globalY":-144,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":3,"localY":-6,"globalX":96,"globalY":-144,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":2,"localY":-6,"globalX":64,"globalY":-144,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":1,"localY":-6,"globalX":32,"globalY":-144,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":0,"localY":-6,"globalX":0,"globalY":-144,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-1,"localY":-6,"globalX":-32,"globalY":-144,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-2,"localY":-6,"globalX":-64,"globalY":-144,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-3,"localY":-6,"globalX":-96,"globalY":-144,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-4,"localY":-6,"globalX":-128,"globalY":-144,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-5,"localY":-6,"globalX":-160,"globalY":-144,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-6,"localY":-5,"globalX":-176,"globalY":-120,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-6,"localY":-4,"globalX":-192,"globalY":-96,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-6,"localY":-3,"globalX":-176,"globalY":-72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-6,"localY":-2,"globalX":-192,"globalY":-48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-6,"localY":-1,"globalX":-176,"globalY":-24,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-6,"localY":0,"globalX":-192,"globalY":0,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-6,"localY":1,"globalX":-176,"globalY":24,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-6,"localY":2,"globalX":-192,"globalY":48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-6,"localY":3,"globalX":-176,"globalY":72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-6,"localY":4,"globalX":-192,"globalY":96,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-6,"localY":5,"globalX":-176,"globalY":120,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":6,"localY":-6,"globalX":192,"globalY":-144,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":6,"localY":-5,"globalX":208,"globalY":-120,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":6,"localY":-3,"globalX":208,"globalY":-72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":7,"localY":-2,"globalX":224,"globalY":-48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":6,"localY":-1,"globalX":208,"globalY":-24,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":7,"localY":0,"globalX":224,"globalY":0,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":6,"localY":1,"globalX":208,"globalY":24,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":6,"localY":3,"globalX":208,"globalY":72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":6,"localY":5,"globalX":208,"globalY":120,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":7,"localY":4,"globalX":224,"globalY":96,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":6,"localY":6,"globalX":192,"globalY":144,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":5,"localY":7,"globalX":176,"globalY":168,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":6,"localY":8,"globalX":192,"globalY":192,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":5,"localY":8,"globalX":160,"globalY":192,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":4,"localY":7,"globalX":144,"globalY":168,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":3,"localY":7,"globalX":112,"globalY":168,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":2,"localY":7,"globalX":80,"globalY":168,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":1,"localY":7,"globalX":48,"globalY":168,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":0,"localY":8,"globalX":0,"globalY":192,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-1,"localY":8,"globalX":-32,"globalY":192,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-2,"localY":8,"globalX":-64,"globalY":192,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-3,"localY":8,"globalX":-96,"globalY":192,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-3,"localY":7,"globalX":-80,"globalY":168,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-4,"localY":7,"globalX":-112,"globalY":168,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-5,"localY":7,"globalX":-144,"globalY":168,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-2,"localY":7,"globalX":-48,"globalY":168,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-1,"localY":7,"globalX":-16,"globalY":168,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":0,"localY":7,"globalX":16,"globalY":168,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":2,"localY":8,"globalX":64,"globalY":192,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":3,"localY":8,"globalX":96,"globalY":192,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":4,"localY":8,"globalX":128,"globalY":192,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":5,"localY":9,"globalX":176,"globalY":216,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":4,"localY":9,"globalX":144,"globalY":216,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":3,"localY":9,"globalX":112,"globalY":216,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":1,"localY":9,"globalX":48,"globalY":216,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-1,"localY":9,"globalX":-16,"globalY":216,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-2,"localY":9,"globalX":-48,"globalY":216,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":1,"localY":8,"globalX":32,"globalY":192,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-3,"localY":9,"globalX":-80,"globalY":216,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-4,"localY":9,"globalX":-112,"globalY":216,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-5,"localY":9,"globalX":-144,"globalY":216,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-5,"localY":8,"globalX":-160,"globalY":192,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-6,"localY":7,"globalX":-176,"globalY":168,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-4,"localY":8,"globalX":-128,"globalY":192,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":0,"localY":9,"globalX":16,"globalY":216,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":2,"localY":9,"globalX":80,"globalY":216,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-6,"localY":6,"globalX":-192,"globalY":144,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-7,"localY":5,"globalX":-208,"globalY":120,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-7,"localY":4,"globalX":-224,"globalY":96,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-7,"localY":3,"globalX":-208,"globalY":72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-8,"localY":3,"globalX":-240,"globalY":72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-7,"localY":2,"globalX":-224,"globalY":48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-8,"localY":1,"globalX":-240,"globalY":24,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-8,"localY":0,"globalX":-256,"globalY":0,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-8,"localY":-1,"globalX":-240,"globalY":-24,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-8,"localY":-2,"globalX":-256,"globalY":-48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-8,"localY":-3,"globalX":-240,"globalY":-72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-7,"localY":-4,"globalX":-224,"globalY":-96,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-8,"localY":-5,"globalX":-240,"globalY":-120,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-7,"localY":-6,"globalX":-224,"globalY":-144,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-7,"localY":-7,"globalX":-208,"globalY":-168,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-6,"localY":-7,"globalX":-176,"globalY":-168,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-5,"localY":-7,"globalX":-144,"globalY":-168,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-4,"localY":-7,"globalX":-112,"globalY":-168,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-4,"localY":-8,"globalX":-128,"globalY":-192,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-3,"localY":-8,"globalX":-96,"globalY":-192,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-2,"localY":-8,"globalX":-64,"globalY":-192,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-3,"localY":-7,"globalX":-80,"globalY":-168,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-2,"localY":-7,"globalX":-48,"globalY":-168,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-1,"localY":-8,"globalX":-32,"globalY":-192,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":0,"localY":-8,"globalX":0,"globalY":-192,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":0,"localY":-9,"globalX":16,"globalY":-216,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":1,"localY":-9,"globalX":48,"globalY":-216,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":2,"localY":-9,"globalX":80,"globalY":-216,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":2,"localY":-8,"globalX":64,"globalY":-192,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":3,"localY":-8,"globalX":96,"globalY":-192,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":4,"localY":-8,"globalX":128,"globalY":-192,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":4,"localY":-7,"globalX":144,"globalY":-168,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":5,"localY":-7,"globalX":176,"globalY":-168,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":0,"localY":-7,"globalX":16,"globalY":-168,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":1,"localY":-7,"globalX":48,"globalY":-168,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":2,"localY":-7,"globalX":80,"globalY":-168,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":1,"localY":-8,"globalX":32,"globalY":-192,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-1,"localY":-7,"globalX":-16,"globalY":-168,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-7,"localY":-5,"globalX":-208,"globalY":-120,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-6,"localY":-6,"globalX":-192,"globalY":-144,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-7,"localY":-3,"globalX":-208,"globalY":-72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-7,"localY":-2,"globalX":-224,"globalY":-48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-7,"localY":-1,"globalX":-208,"globalY":-24,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-7,"localY":0,"globalX":-224,"globalY":0,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-7,"localY":1,"globalX":-208,"globalY":24,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-8,"localY":2,"globalX":-256,"globalY":48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-8,"localY":5,"globalX":-240,"globalY":120,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-7,"localY":6,"globalX":-224,"globalY":144,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-7,"localY":7,"globalX":-208,"globalY":168,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-8,"localY":9,"globalX":-240,"globalY":216,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-8,"localY":10,"globalX":-256,"globalY":240,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-7,"localY":10,"globalX":-224,"globalY":240,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-7,"localY":9,"globalX":-208,"globalY":216,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-6,"localY":9,"globalX":-176,"globalY":216,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-6,"localY":8,"globalX":-192,"globalY":192,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-7,"localY":8,"globalX":-224,"globalY":192,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":-8,"localY":7,"globalX":-240,"globalY":168,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":5,"localY":10,"globalX":160,"globalY":240,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":6,"localY":10,"globalX":192,"globalY":240,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":7,"localY":10,"globalX":224,"globalY":240,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":7,"localY":9,"globalX":240,"globalY":216,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":6,"localY":9,"globalX":208,"globalY":216,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":7,"localY":8,"globalX":224,"globalY":192,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":6,"localY":7,"globalX":208,"globalY":168,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":7,"localY":6,"globalX":224,"globalY":144,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":7,"localY":5,"globalX":240,"globalY":120,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":8,"localY":4,"globalX":256,"globalY":96,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":7,"localY":3,"globalX":240,"globalY":72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":8,"localY":2,"globalX":256,"globalY":48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":7,"localY":1,"globalX":240,"globalY":24,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":8,"localY":0,"globalX":256,"globalY":0,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":8,"localY":-2,"globalX":256,"globalY":-48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":8,"localY":-3,"globalX":272,"globalY":-72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":7,"localY":-3,"globalX":240,"globalY":-72,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":8,"localY":-4,"globalX":256,"globalY":-96,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":7,"localY":-4,"globalX":224,"globalY":-96,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":7,"localY":2,"globalX":224,"globalY":48,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":6,"localY":-9,"globalX":208,"globalY":-216,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":5,"localY":-9,"globalX":176,"globalY":-216,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":6,"localY":-10,"globalX":192,"globalY":-240,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":7,"localY":-5,"globalX":240,"globalY":-120,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":7,"localY":-6,"globalX":224,"globalY":-144,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":6,"localY":-7,"globalX":208,"globalY":-168,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":6,"localY":-8,"globalX":192,"globalY":-192,"sx":0,"sy":0},{"type":"cell","file":"pixelforge_export (3).png","localX":5,"localY":-8,"globalX":160,"globalY":-192,"sx":0,"sy":0}],"polyCollisions":[]},{"name":"Map 2","visible":true,"isCollisionMap":false,"items":[{"type":"free","file":"TX Shadow Plant.png","globalX":-172.15774827766924,"globalY":-80.75146219447424,"sx":47,"sy":99,"w":88,"h":54,"sortY":-26.751462194474236},{"type":"free","file":"TX Shadow Plant.png","globalX":-133.62489436094307,"globalY":-81.44915207920735,"sx":172,"sy":104,"w":84,"h":48,"sortY":-33.44915207920736},{"type":"free","file":"TX Shadow Plant.png","globalX":151.3313661895208,"globalY":106.08616469332014,"sx":172,"sy":104,"w":84,"h":48,"sortY":154.08616469332014},{"type":"free","file":"TX Shadow Plant.png","globalX":84.78999093663793,"globalY":-128.85305318483032,"sx":47,"sy":99,"w":88,"h":54,"sortY":-74.85305318483032},{"type":"free","file":"TX Shadow Plant.png","globalX":118.18963137418254,"globalY":111.47728379470806,"sx":303,"sy":110,"w":76,"h":42,"sortY":153.47728379470806},{"type":"free","file":"TX Shadow Plant.png","globalX":105.40313250332841,"globalY":-152.16814530433226,"sx":303,"sy":110,"w":76,"h":42,"sortY":-110.16814530433224},{"type":"free","file":"TX Shadow.png","globalX":-126.37536992454861,"globalY":57.10972756727688,"sx":161,"sy":492,"w":31,"h":18,"sortY":75.10972756727688},{"type":"free","file":"TX Shadow.png","globalX":-117.87536992454861,"globalY":68.50409966244825,"sx":9,"sy":494,"w":14,"h":9,"sortY":77.50409966244825}],"polyCollisions":[]},{"name":"Map 3","visible":true,"isCollisionMap":false,"items":[{"type":"free","file":"TX Plant.png","globalX":-143.0245010336451,"globalY":-188.5443816814623,"sx":160,"sy":16,"w":98,"h":138,"sortY":-50.5443816814623},{"type":"free","file":"TX Plant.png","globalX":96.84072604172187,"globalY":-262.299732252765,"sx":160,"sy":16,"w":98,"h":138,"sortY":-124.29973225276498},{"type":"free","file":"TX Plant.png","globalX":133.5601645211768,"globalY":-5.793154302864934,"sx":294,"sy":30,"w":81,"h":122,"sortY":116.20684569713507},{"type":"free","file":"TX Plant.png","globalX":143.0179890081027,"globalY":1.295477180325463,"sx":160,"sy":16,"w":98,"h":138,"sortY":139.29547718032546},{"type":"free","file":"TX Plant.png","globalX":101.16774353238321,"globalY":0.21952980392467225,"sx":23,"sy":13,"w":115,"h":141,"sortY":141.21952980392467},{"type":"free","file":"TX Plant.png","globalX":-186.15744825843072,"globalY":-192.18573255599537,"sx":23,"sy":13,"w":115,"h":141,"sortY":-51.185732555995365},{"type":"free","file":"TX Plant.png","globalX":72.30695417839522,"globalY":-238.36299552237617,"sx":23,"sy":13,"w":115,"h":141,"sortY":-97.36299552237617},{"type":"free","file":"TX Plant.png","globalX":-153.22196702536272,"globalY":-39.75671470692218,"sx":40,"sy":393,"w":18,"h":12,"sortY":-27.756714706922182},{"type":"free","file":"TX Plant.png","globalX":-55.48682029681582,"globalY":-87.90564728642691,"sx":40,"sy":393,"w":18,"h":12,"sortY":-75.90564728642691},{"type":"free","file":"TX Plant.png","globalX":152.56067856307936,"globalY":-113.03493182515071,"sx":72,"sy":393,"w":17,"h":12,"sortY":-101.03493182515071},{"type":"free","file":"TX Plant.png","globalX":118.91894374774112,"globalY":128.86414222801758,"sx":75,"sy":492,"w":10,"h":10,"sortY":138.86414222801758},{"type":"free","file":"TX Props.png","globalX":-126.82684491375457,"globalY":46.540528772358954,"sx":161,"sy":481,"w":29,"h":29,"sortY":75.54052877235895},{"type":"free","file":"TX Props.png","globalX":-118.21796401514247,"globalY":64.75829056958315,"sx":9,"sy":491,"w":13,"h":12,"sortY":76.75829056958315}],"polyCollisions":[]}]}]};
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = false;
+
+    // --- New 5x7 Font System ---
+    const FONT = {
+        'A':[14,17,17,31,17,17,17], 'B':[30,17,17,30,17,17,30], 'C':[14,17,16,16,16,17,14],
+        'D':[30,17,17,17,17,17,30], 'E':[31,16,16,30,16,16,31], 'F':[31,16,16,30,16,16,16],
+        'G':[14,17,16,23,17,17,14], 'H':[17,17,17,31,17,17,17], 'I':[14,4,4,4,4,4,14],
+        'J':[7,2,2,2,2,18,12],      'K':[17,18,20,24,20,18,17], 'L':[16,16,16,16,16,16,31],
+        'M':[17,27,21,17,17,17,17], 'N':[17,17,25,21,19,17,17], 'O':[14,17,17,17,17,17,14],
+        'P':[30,17,17,30,16,16,16], 'Q':[14,17,17,17,21,18,13], 'R':[30,17,17,30,20,18,17],
+        'S':[15,16,16,14,1,1,30],   'T':[31,4,4,4,4,4,4],       'U':[17,17,17,17,17,17,14],
+        'V':[17,17,17,17,17,10,4],  'W':[17,17,17,21,21,27,17], 'X':[17,17,10,4,10,17,17],
+        'Y':[17,17,17,10,4,4,4],    'Z':[31,1,2,4,8,16,31],     '0':[14,17,19,21,25,17,14],
+        '1':[4,12,4,4,4,4,14],      '2':[14,17,1,2,4,8,31],     '3':[31,2,4,2,1,17,14],
+        '4':[2,6,10,18,31,2,2],     '5':[31,16,30,1,1,17,14],   '6':[14,16,16,30,17,17,14],
+        '7':[31,1,2,4,8,8,8],       '8':[14,17,17,14,17,17,14], '9':[14,17,17,15,1,1,14],
+        ':':[0,4,4,0,4,4,0],        '+':[0,4,4,31,4,4,0],       '!':[4,4,4,4,4,0,4],
+        ' ':[0,0,0,0,0,0,0]
+    };
+
+    function drawText(text, x, y, color, scale = 1, align = 'left') {
+        ctx.fillStyle = color;
+        text = String(text).toUpperCase();
+        
+        let width = (text.length * 6 - 1) * scale;
+        
+        if (align === 'center') x = x - width / 2;
+        else if (align === 'right') x = x - width;
+
+        for (let i = 0; i < text.length; i++) {
+            let char = text[i];
+            let data = FONT[char] || FONT[' '];
+            for (let row = 0; row < 7; row++) {
+                for (let col = 0; col < 5; col++) {
+                    if ((data[row] >> (4 - col)) & 1) {
+                        ctx.fillRect(Math.floor(x + i * 6 * scale + col * scale), Math.floor(y + row * scale), Math.max(1, Math.floor(scale)), Math.max(1, Math.floor(scale)));
+                    }
+                }
+            }
+        }
+    }
+
+    // --- Dynamic Asset Loading ---
+    const IMAGES = {};
+    const srcList = new Set([
+        'highlighttile.png', 'anim_complete.png', 'anim_planted.png', 'pillar.png', 'inventorytile.png',
+        'plant_1.png', 'plant_2.png', 'plant_3.png', 
+        'plant_4.png', 'plant_5.png', 'plant_6.png',
+        'endturn.png', 'bt_retry.png', 'bt_play.png', 'bt_restart.png', 'bt_tutorial.png', 'title.png'
+    ]);
+
+    if (BOARD_JSON.layers && BOARD_JSON.layers[0].maps) {
+        BOARD_JSON.layers[0].maps.forEach(map => {
+            if (map.items) map.items.forEach(item => srcList.add(item.file));
+        });
+    }
+
+    let loaded = 0;
+    srcList.forEach(src => {
+        let img = new Image();
+        img.onload = () => { loaded++; if (loaded === srcList.size) requestAnimationFrame(gameLoop); };
+        img.onerror = () => { loaded++; if (loaded === srcList.size) requestAnimationFrame(gameLoop); };
+        img.src = `./assets/sprites/${src}`;
+        IMAGES[src] = img;
+    });
+
+    // --- Game States & Core Variables ---
+    let gameState = 'MENU'; 
+    let transitionAlpha = 0;
+    let transitionTarget = null;
+    let highScore = parseInt(localStorage.getItem('hexMergeHighScore')) || 0;
+    let instructionText = "";
+
+    let hexes = {};
+    let shadowItems = [];
+    let propItems = [];
+    let globalTurns = 10;
+    let score = 0;
+    let turnsPlayed = 0;
+    let gameOver = false;
+    let selectedNode = null; 
+    let floatingTexts = []; 
+    let currentPattern = null;
+    
+    const cx = 159, cy = 159; 
+    
+    // UI Clickable Areas (Buttons scaled up 4x for chunkiness)
+    const UI = {
+        endBtn: { x: 312, y: 10, w: 24, h: 24 },
+        retryBtn: { x: 312, y: 38, w: 24, h: 24 }, // Placed right under end turn
+        playBtn: { x: 101, y: 150, w: 148, h: 48 },  
+        tutBtn: { x: 101, y: 210, w: 148, h: 48 },  
+        restartBtn: { x: 101, y: 220, w: 148, h: 48 }
+    };
+
+    const PATTERN_SHAPES = [
+        { offsets: [[[0,0], [1,0], [2,0]], [[0,0], [0,1], [0,2]], [[0,0], [1,-1], [2,-2]]] },
+        { offsets: [[[0,0], [1,0], [0,1]], [[0,0], [1,-1], [1,0]]] }
+    ];
+
+    // --- State Management ---
+    function triggerTransition(newState) { transitionTarget = newState; }
+
+    function executeTransition() {
+        gameState = transitionTarget;
+        transitionTarget = null;
+        
+        if (gameState === 'PLAY') initGame();
+        else if (gameState === 'TUTORIAL_1') initTutorialPhase1();
+        else if (gameState === 'TUTORIAL_2') initTutorialPhase2();
+        else if (gameState === 'TUTORIAL_3') initTutorialPhase3();
+        else if (gameState === 'MENU') {} 
+        else if (gameState === 'TUTORIAL_DONE') {
+            setTimeout(() => { triggerTransition('MENU'); }, 2500);
+        }
+    }
+
+    // --- Initialization Functions ---
+    function updateHighScore() {
+        if (score > highScore) {
+            highScore = score;
+            localStorage.setItem('hexMergeHighScore', highScore);
+        }
+    }
+
+    function createTutorialBoard() {
+        hexes = {}; shadowItems = []; propItems = []; floatingTexts = [];
+        currentPattern = null; selectedNode = null; score = 0; turnsPlayed = 0; gameOver = false;
+
+        for (let q = -1; q <= 1; q++) {
+            for (let r = -1; r <= 1; r++) {
+                if (Math.abs(q) + Math.abs(r) + Math.abs(q+r) <= 2) { 
+                    const px = cx + (q * 32) + (r * 16); 
+                    const py = cy + (r * 24);
+                    hexes[`${q},${r}`] = { 
+                        id: `${q},${r}`, q, r, px, py, 
+                        file: 'inventorytile.png',
+                        plant: null, playable: true, completeTimer: 0, animPlacedStart: 0 
+                    };
+                }
+            }
+        }
+    }
+
+    function initTutorialPhase1() {
+        createTutorialBoard();
+        instructionText = "MERGE TWO TIER 1 PLANTS";
+        hexes['0,0'].plant = { type: 'plant', tier: 1, fruit: true };
+        hexes['1,0'].plant = { type: 'plant', tier: 1, fruit: true };
+    }
+
+    function initTutorialPhase2() {
+        createTutorialBoard();
+        instructionText = "MAKE A TIER 3 PLANT";
+        hexes['0,0'].plant = { type: 'plant', tier: 2, fruit: true };
+        hexes['-1,1'].plant = { type: 'plant', tier: 1, fruit: true };
+        hexes['0,1'].plant = { type: 'plant', tier: 1, fruit: true };
+    }
+
+    function initTutorialPhase3() {
+        createTutorialBoard();
+        instructionText = "SPREAD AND CREATE 3 TIER 2 PLANTS";
+        globalTurns = 2; 
+        hexes['0,0'].plant = { type: 'plant', tier: 1, fruit: true };
+        hexes['-1,0'].plant = { type: 'plant', tier: 1, fruit: true };
+        hexes['1,0'].plant = { type: 'plant', tier: 1, fruit: true };
+    }
+
+    function initGame() {
+        hexes = {}; shadowItems = []; propItems = []; floatingTexts = [];
+        currentPattern = null; selectedNode = null;
+        globalTurns = 10; score = 0; turnsPlayed = 0; gameOver = false;
+        const playableHexes = [];
+
+        if (!BOARD_JSON.layers || !BOARD_JSON.layers[0].maps) return; 
+
+        const map1 = BOARD_JSON.layers[0].maps.find(m => m.name === "Map 1");
+        const map2 = BOARD_JSON.layers[0].maps.find(m => m.name === "Map 2");
+        const map3 = BOARD_JSON.layers[0].maps.find(m => m.name === "Map 3");
+
+        if (map1 && map1.items) {
+            map1.items.forEach(item => {
+                const r = Math.round(item.globalY / 24);
+                const q = Math.round((item.globalX - (r * 16)) / 32);
+                const distFromCenter = (Math.abs(q) + Math.abs(r) + Math.abs(q + r)) / 2;
+                const isPlayableArea = distFromCenter <= 3;
+
+                const h = { 
+                    id: `${q},${r}`, q, r, 
+                    px: cx + item.globalX, py: cy + item.globalY,
+                    sx: item.sx, sy: item.sy, file: item.file,
+                    plant: null, playable: isPlayableArea, completeTimer: 0, animPlacedStart: 0 
+                };
+                hexes[h.id] = h;
+                if (isPlayableArea) playableHexes.push(h);
+            });
+        }
+
+        if (map2 && map2.items) shadowItems = map2.items;
+        if (map3 && map3.items) propItems = map3.items;
+
+        playableHexes.sort(() => Math.random() - 0.5);
+        for (let i = 0; i < Math.min(13, playableHexes.length); i++) {
+            let tier = i < 5 ? 1 : (i < 10 ? 2 : 3);
+            playableHexes[i].plant = { type: 'plant', tier: tier, fruit: true };
+        }
+    }
+
+    // --- Core Logic ---
+    function hasPattern(tier, shape) {
+        for (const key in hexes) {
+            const h = hexes[key];
+            if (!h.playable) continue;
+            for (let variant of shape.offsets) {
+                let isMatch = true;
+                for (let off of variant) {
+                    let chk = hexes[`${h.q + off[0]},${h.r + off[1]}`];
+                    if (!chk || !chk.playable || !chk.plant) { isMatch = false; break; }
+                    if (chk.plant.type !== 'pillar' && chk.plant.tier !== tier) { isMatch = false; break; }
+                    if (chk.plant.fruit === false) { isMatch = false; break; }
+                }
+                if (isMatch) return { h, variant };
+            }
+        }
+        return null;
+    }
+
+    function generateNewPattern() {
+        if (gameState !== 'PLAY') return; 
+        let minTier = Math.min(5, 1 + Math.floor(turnsPlayed / 10)); 
+        let maxTier = Math.min(6, 2 + Math.floor(turnsPlayed / 5)); 
+        
+        let availablePatterns = [];
+        for (let t = minTier; t <= maxTier; t++) {
+            for (let s of PATTERN_SHAPES) {
+                if (!hasPattern(t, s)) availablePatterns.push({ tier: t, shape: s });
+            }
+        }
+        
+        let checkTier = 1;
+        while (availablePatterns.length === 0 && checkTier <= 6) {
+            for (let s of PATTERN_SHAPES) {
+                if (!hasPattern(checkTier, s)) availablePatterns.push({ tier: checkTier, shape: s });
+            }
+            checkTier++;
+        }
+        if (availablePatterns.length === 0) currentPattern = { tier: 6, shape: PATTERN_SHAPES[0] }; 
+        else currentPattern = availablePatterns[Math.floor(Math.random() * availablePatterns.length)];
+    }
+
+    function checkPatterns() {
+        if (!currentPattern || turnsPlayed === 0 || gameState !== 'PLAY') return;
+        let match = hasPattern(currentPattern.tier, currentPattern.shape);
+        if (match) {
+            let pointsEarned = currentPattern.tier * 50; 
+            score += pointsEarned;
+            
+            const anchorQ = -6, anchorR = 5; 
+            floatingTexts.push({
+                text: `+${pointsEarned}`,
+                x: cx + (anchorQ * 32) + (anchorR * 16) + 16,
+                y: cy + (anchorR * 24) - 10,
+                alpha: 1.0, life: 90
+            });
+
+            for (let off of match.variant) {
+                let chk = hexes[`${match.h.q + off[0]},${match.h.r + off[1]}`];
+                if(chk) chk.completeTimer = Date.now() + 2000;
+            }
+            generateNewPattern(); 
+        }
+    }
+
+    function isNeighbor(h1, h2) {
+        const dq = h1.q - h2.q;
+        const dr = h1.r - h2.r;
+        return (Math.abs(dq) <= 1 && Math.abs(dr) <= 1 && Math.abs(dq + dr) <= 1 && (dq !== 0 || dr !== 0));
+    }
+
+    function isValidTarget(src, tgt) {
+        if (!tgt.playable || !isNeighbor(src, tgt)) return false;
+        if (!tgt.plant) return true; 
+        if (tgt.plant.type === 'plant' && tgt.plant.tier === src.plant.tier && src.plant.tier <= 6) {
+            return tgt.plant.fruit === true;
+        }
+        return false;
+    }
+
+    function checkTutorialWinStates() {
+        if (gameState === 'TUTORIAL_1') {
+            for (let key in hexes) {
+                if (hexes[key].plant && hexes[key].plant.tier >= 2) triggerTransition('TUTORIAL_2');
+            }
+        } else if (gameState === 'TUTORIAL_2') {
+            for (let key in hexes) {
+                if (hexes[key].plant && hexes[key].plant.tier >= 3) triggerTransition('TUTORIAL_3');
+            }
+        }
+    }
+
+    function endTurn() {
+        if (gameOver || transitionTarget !== null) return;
+        
+        globalTurns--;
+        turnsPlayed++;
+
+        for (const key in hexes) {
+            const h = hexes[key];
+            if (h.plant && h.plant.type === 'plant') h.plant.fruit = true;
+        }
+        selectedNode = null;
+
+        checkPatterns();
+        
+        if (gameState === 'PLAY') {
+            if (globalTurns <= 0) {
+                gameOver = true;
+                updateHighScore();
+            }
+            if (turnsPlayed === 1) generateNewPattern();
+        } else if (gameState === 'TUTORIAL_3') {
+            if (globalTurns <= 0) {
+                let t2Count = 0;
+                for (let key in hexes) {
+                    if (hexes[key].plant && hexes[key].plant.tier >= 2) t2Count++;
+                }
+                if (t2Count >= 3) triggerTransition('TUTORIAL_DONE');
+                else triggerTransition('TUTORIAL_3');
+            }
+        }
+    }
+
+    // --- Input Handling ---
+    function isInside(mx, my, box) {
+        return mx >= box.x && mx <= box.x + box.w && my >= box.y && my <= box.y + box.h;
+    }
+
+    canvas.addEventListener('mousedown', (e) => {
+        if (transitionTarget !== null) return; 
+
+        const rect = canvas.getBoundingClientRect();
+        const mx = (e.clientX - rect.left) * (canvas.width / rect.width);
+        const my = (e.clientY - rect.top) * (canvas.height / rect.height);
+
+        // Menu Clicks
+        if (gameState === 'MENU') {
+            if (isInside(mx, my, UI.playBtn)) triggerTransition('PLAY');
+            else if (isInside(mx, my, UI.tutBtn)) triggerTransition('TUTORIAL_1');
+            return;
+        }
+
+        // Restart Click (Game Over)
+        if (gameOver && isInside(mx, my, UI.restartBtn)) {
+            triggerTransition('PLAY');
+            return;
+        }
+        if (gameOver || gameState === 'TUTORIAL_DONE') return;
+
+        // Active Play UI Buttons
+        if (gameState === 'PLAY' || gameState === 'TUTORIAL_3') {
+            if (isInside(mx, my, UI.endBtn)) {
+                endTurn();
+                return;
+            }
+            if (isInside(mx, my, UI.retryBtn)) {
+                triggerTransition(gameState); // Restart current state
+                return;
+            }
+        }
+
+        // Board Interaction
+        let clickedNode = null;
+        let minDist = Infinity;
+        for (const node of Object.values(hexes)) {
+            const centerPx = node.px + 16;
+            const centerPy = node.py + 16;
+            const dist = (centerPx - mx) ** 2 + (centerPy - my) ** 2;
+            if (dist < 256 && dist < minDist) { 
+                minDist = dist;
+                clickedNode = node;
+            }
+        }
+
+        if (!clickedNode) {
+            selectedNode = null;
+            return;
+        }
+
+        if (selectedNode) {
+            if (clickedNode === selectedNode) {
+                selectedNode = null; 
+            } else if (isValidTarget(selectedNode, clickedNode)) {
+                if (clickedNode.plant) {
+                    let mergedTier = selectedNode.plant.tier + 1;
+                    if (mergedTier === 7) {
+                        clickedNode.plant = { type: 'pillar' };
+                        if (gameState === 'PLAY') globalTurns += 3;
+                    } else {
+                        clickedNode.plant = { type: 'plant', tier: mergedTier, fruit: true };
+                    }
+                    score += 15;
+                    selectedNode.plant = null; 
+                } else {
+                    clickedNode.plant = { type: 'plant', tier: 1, fruit: false };
+                    score += 5;
+                    selectedNode.plant.fruit = false;
+                }
+                
+                // Trigger placement animation
+                clickedNode.animPlacedStart = Date.now();
+                
+                selectedNode = null;
+                checkPatterns();
+                checkTutorialWinStates();
+            } else selectedNode = null; 
+        } else {
+            if (clickedNode.playable && clickedNode.plant && clickedNode.plant.fruit && clickedNode.plant.type !== 'pillar') {
+                selectedNode = clickedNode;
+            }
+        }
+    });
+
+    // --- Rendering ---
+    function render() {
+        ctx.fillStyle = '#111';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        const now = Date.now();
+
+        if (gameState === 'MENU') {
+            if (IMAGES['title.png']?.complete) {
+                ctx.drawImage(IMAGES['title.png'], 32, 40, 296, 64); 
+            }
+            
+            drawText(`HIGH SCORE: ${highScore}`, 175, 120, '#FFF', 2, 'center');
+            
+            if (IMAGES['bt_play.png']?.complete) {
+                ctx.drawImage(IMAGES['bt_play.png'], UI.playBtn.x, UI.playBtn.y, UI.playBtn.w, UI.playBtn.h);
+            }
+            if (IMAGES['bt_tutorial.png']?.complete) {
+                ctx.drawImage(IMAGES['bt_tutorial.png'], UI.tutBtn.x, UI.tutBtn.y, UI.tutBtn.w, UI.tutBtn.h);
+            }
+        } else {
+            // Gameplay / Tutorial rendering
+            for (const key in hexes) {
+                const h = hexes[key];
+                let imgToDraw = IMAGES[h.file];
+                
+                // Animated Completion Tile Render
+                if (h.completeTimer && now < h.completeTimer && IMAGES['anim_complete.png']?.complete) {
+                    let elapsed = 2000 - (h.completeTimer - now);
+                    let frame = Math.floor(elapsed / 150) % 3; // 150ms per frame, 3 frames
+                    ctx.drawImage(IMAGES['anim_complete.png'], frame * 32, 0, 32, 32, h.px, h.py, 32, 32);
+                } else if (imgToDraw?.complete) {
+                    if (h.sx !== undefined) ctx.drawImage(imgToDraw, h.sx, h.sy, 32, 32, h.px, h.py, 32, 32);
+                    else ctx.drawImage(imgToDraw, h.px, h.py, 32, 32); 
+                }
+            }
+
+            if (gameState === 'PLAY') {
+                ctx.globalAlpha = 0.5;
+                shadowItems.forEach(item => {
+                    const img = IMAGES[item.file];
+                    if (img?.complete) {
+                        const w = item.width || item.w || img.width || 32;
+                        const h = item.height || item.h || img.height || 32;
+                        ctx.drawImage(img, item.sx || 0, item.sy || 0, w, h, cx + item.globalX, cy + item.globalY, w, h);
+                    }
+                });
+                ctx.globalAlpha = 1.0;
+            }
+
+            for (const key in hexes) {
+                const h = hexes[key];
+                if (selectedNode && (selectedNode === h || (h.playable && isValidTarget(selectedNode, h)))) {
+                    if (IMAGES['highlighttile.png']?.complete) ctx.drawImage(IMAGES['highlighttile.png'], h.px, h.py, 32, 32);
+                }
+            }
+
+            for (const key in hexes) {
+                const h = hexes[key];
+                if (h.plant) {
+                    if (h.plant.type === 'pillar' && IMAGES['pillar.png']?.complete) {
+                        ctx.drawImage(IMAGES['pillar.png'], h.px, h.py, 32, 32);
+                    } else if (h.plant.type === 'plant') {
+                        const sprite = IMAGES[`plant_${h.plant.tier}.png`];
+                        if (sprite?.complete) {
+                            const sourceX = h.plant.fruit ? 0 : 32;
+                            ctx.drawImage(sprite, sourceX, 0, 32, 32, h.px, h.py, 32, 32);
+                        }
+                    }
+                }
+                
+                // Animated Placed Tile Render (Draws over the plant)
+                if (h.animPlacedStart && IMAGES['anim_planted.png']?.complete) {
+                    let elapsed = now - h.animPlacedStart;
+                    let frame = Math.floor(elapsed / 50); // 100ms per frame
+                    if (frame < 5) {
+                        ctx.drawImage(IMAGES['anim_planted.png'], frame * 32, 0, 32, 32, h.px, h.py, 32, 32);
+                    }
+                }
+            }
+
+            if (gameState === 'PLAY') {
+                propItems.forEach(item => {
+                    const img = IMAGES[item.file];
+                    if (img?.complete) {
+                        const w = item.width || item.w || img.width || 32;
+                        const h = item.height || item.h || img.height || 32;
+                        ctx.drawImage(img, item.sx || 0, item.sy || 0, w, h, cx + item.globalX, cy + item.globalY, w, h);
+                    }
+                });
+            }
+
+            // In-Game UI
+            if (gameState === 'PLAY' || gameState === 'TUTORIAL_3') {
+                drawText(`Turns:${globalTurns}`, 10, 10, '#FFF', 1);
+                
+                // Draw End Turn & Retry Buttons
+                if (IMAGES['endturn.png']?.complete) {
+                    ctx.drawImage(IMAGES['endturn.png'], UI.endBtn.x, UI.endBtn.y, UI.endBtn.w, UI.endBtn.h);
+                }
+                if (IMAGES['bt_retry.png']?.complete) {
+                    ctx.drawImage(IMAGES['bt_retry.png'], UI.retryBtn.x, UI.retryBtn.y, UI.retryBtn.w, UI.retryBtn.h);
+                }
+            }
+            if (gameState === 'PLAY') {
+                drawText(`Score:${score}`, 10, 25, '#FFF', 1);
+            }
+
+            if (gameState.startsWith('TUTORIAL') && gameState !== 'TUTORIAL_DONE') {
+                drawText(instructionText, 175, 320, '#FFD700', 1, 'center');
+            }
+
+            if (currentPattern && gameState === 'PLAY') {
+                const anchorQ = -6, anchorR = 5; 
+                for (let off of currentPattern.shape.offsets[0]) {
+                    const q = anchorQ + off[0], r = anchorR + off[1];
+                    const drawX = cx + (q * 32) + (r * 16), drawY = cy + (r * 24);
+                    if (IMAGES['inventorytile.png']?.complete) ctx.drawImage(IMAGES['inventorytile.png'], drawX, drawY, 32, 32);
+                    const sprite = IMAGES[`plant_${currentPattern.tier}.png`];
+                    if (sprite?.complete) ctx.drawImage(sprite, 0, 0, 32, 32, drawX, drawY, 32, 32);
+                }
+            }
+
+            for (let i = floatingTexts.length - 1; i >= 0; i--) {
+                let ft = floatingTexts[i];
+                ctx.globalAlpha = Math.max(0, ft.alpha);
+                drawText(ft.text, ft.x, ft.y, '#55FF55', 1, 'center');
+                ctx.globalAlpha = 1.0;
+                ft.y -= 0.5; ft.alpha -= 0.015; ft.life--;
+                if (ft.life <= 0) floatingTexts.splice(i, 1);
+            }
+
+            if (gameOver) {
+                ctx.fillStyle = 'rgba(0,0,0,0.8)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+                drawText("GAME OVER", 175, 120, '#FF0000', 3, 'center');
+                drawText(`SCORE: ${score}`, 175, 160, '#FFFFFF', 2, 'center');
+                                
+                if (IMAGES['bt_restart.png']?.complete) {
+                    ctx.drawImage(IMAGES['bt_restart.png'], UI.restartBtn.x, UI.restartBtn.y, UI.restartBtn.w, UI.restartBtn.h);
+                }
+            }
+
+            if (gameState === 'TUTORIAL_DONE') {
+                ctx.fillStyle = 'rgba(0,0,0,0.8)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+                drawText("TUTORIAL COMPLETE!", 175, 160, '#55FF55', 2, 'center');
+            }
+        }
+
+        if (transitionTarget !== null) {
+            transitionAlpha += 0.05;
+            if (transitionAlpha >= 1) {
+                transitionAlpha = 1;
+                executeTransition();
+            }
+        } else if (transitionAlpha > 0) {
+            transitionAlpha -= 0.05;
+            if (transitionAlpha < 0) transitionAlpha = 0;
+        }
+
+        if (transitionAlpha > 0) {
+            ctx.fillStyle = `rgba(0,0,0,${transitionAlpha})`;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+    }
+
+    function gameLoop() {
+        render();
+        requestAnimationFrame(gameLoop);
+    }
+</script>
+</body>
+</html>
